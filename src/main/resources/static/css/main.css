@@ -1,0 +1,23 @@
+body {
+	background: #9b9b9b!important;	
+}
+
+.headerText{
+
+	padding-left: 200px;
+	
+}
+
+.headerImage{
+	padding: 15px;
+	
+}
+.spacerVereticalSm {
+    height:20px;
+    width:auto;
+}
+
+.page-header {
+	background-color: #000000!important
+	
+	}

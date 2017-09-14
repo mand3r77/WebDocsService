@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+<head lang="en">
+<meta charset="utf-8" />
+<title>USCS Appointment Creator</title>
+
+<script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<script th:src="@{/js/mainJs.js}"></script>
+
+
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+
+
+
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<table>
+				<tr>
+					<td>
+						<div class="headerImage">
+							<img th:src="@{/images/errorLogo_test.png}" alt="HTML5 Icon"
+								style="width: 170px; height: 210px;" />
+						</div>
+
+					</td>
+					<td>
+						<div class="headerText">
+							<h1>APPOINTMENT UTILITY</h1>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div th:if="${recBadData == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Receipt not valid please use only numbers!</label>
+			</div>
+		</div>
+		<div th:if="${badDoor == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Door not valid please use only real door numbers!</label>
+			</div>
+		</div>
+		<div th:if="${noReceipt == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Receipt/s</label>
+				<label><c:out value="${notFoundList}"></c:out></label>
+				<span th:utext="${notFoundList}">Description</span>
+				<label>were not found for that warehouse!</label>
+			</div>
+		</div>
+
+		
+		<div th:if="${recError == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>There was an error with the process</label>
+			</div>
+		</div>
+
+		<div th:if="${goodReceipt == true}">
+			<div class="alert alert-success" role="alert" align="center">
+				<label>Receipt/s</label>
+				<span th:utext="${successful}">Description</span>
+				<label>now have appointments linked to it!</label>
+			</div>
+		</div>
+
+		<div th:if="${dtBadData == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Receipt not valid please use only numbers!</label>
+			</div>
+		</div>
+
+		<div th:if="${noDT == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Receipt was not found for that warehouse!</label>
+			</div>
+		</div>
+		
+		<div th:if="${goodDT == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>Receipt was not found for that warehouse!</label>
+			</div>
+		</div>
+
+		<div th:if="${dtError == true}">
+			<div class="alert alert-danger" role="alert" align="center">
+				<label>There was an error with the process</label>
+			</div>
+		</div>
+
+		<div th:if="${dtSuccess == true}">
+			<div class="alert alert-success" role="alert" align="center">
+				<label>Receipt now has an appointment linked to it!</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel with-nav-tabs panel-default">
+					<div class="panel-heading">
+						<ul class="nav nav-tabs">
+							<li class="active"><a href="#tab1default" data-toggle="tab">Inbound
+									Appointmen</a></li>
+							<li><a href="#tab2default" data-toggle="tab">Outbound
+									Appointment</a></li>
+						</ul>
+					</div>
+					<div class="panel-body">
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab1default">
+								<form class="form-horizontal" action="createInboundAppointment"
+									method="post">
+
+									<div class="spacerVereticalSm"></div>
+
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Warehouse Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="whseNumber"
+													data-toggle="tooltip" title="Enter a USCS Warehouse Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="padBtm">
+										 <div class="form-group ">
+
+											<div class="col-sm-3">
+												<label>Enter Appointment Date/Time: </label>
+											</div>
+
+											<div class="col-sm-4">
+												<div class='input-group date' id='datetimepicker1'>
+                 								   <input type='text' class="form-control" name="dateTime"/>
+                									    <span class="input-group-addon">
+                  									      <span class="glyphicon glyphicon-calendar"></span>
+             										       </span>
+          									      </div>								
+											</div>
+										</div>
+									 </div>
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Door Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="doorNumber"
+													data-toggle="tooltip" title="Enter a USCS Door Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Trailer Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="trailerNumber"
+													data-toggle="tooltip" title="Enter a Tailer Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3">
+											<label>Enter Up To 5 Receipt Numbers: </label>
+										</div>
+										<div class="col-sm-4"></div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="reNumber1"
+												data-toggle="tooltip" title="Enter a USCS Receipt Number"
+												required="required" maxlength="10" />
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="reNumber2"
+												data-toggle="tooltip" title="Enter a USCS Receipt Number"
+												maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="reNumber3"
+												data-toggle="tooltip" title="Enter a USCS Receipt Number"
+												maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="reNumber4"
+												data-toggle="tooltip" title="Enter a USCS Receipt Number"
+												maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="reNumber5"
+												data-toggle="tooltip" title="Enter a USCS Receipt Number"
+												maxlength="10" />
+										</div>
+									</div>
+
+									<div class="spacerVereticalSm"></div>
+									<div class="spacerVereticalSm"></div>
+
+									<button type="reset" class="btn btn">
+										<div class="warningText">Clear Form</div>
+									</button>
+									<button type="submit" class="btn btn-primary"
+										id="createAppointmentBtn">Create Inbound Appointment</button>
+								</form>
+
+							</div>
+							<div class="tab-pane fade" id="tab2default">
+								<form class="form-horizontal" action="createOutboundAppointment"
+									method="post">
+									<div class="spacerVereticalSm"></div>
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Warehouse Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="whseNumber"
+													data-toggle="tooltip" title="Enter a USCS Warehouse Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="padBtm">
+										 <div class="form-group ">
+
+											<div class="col-sm-3">
+												<label>Enter Appointment Date/Time: </label>
+											</div>
+
+											<div class="col-sm-4">
+												<div class='input-group date' id='datetimepicker1'>
+                 								   <input type='text' class="form-control" name="dateTime"/>
+                									    <span class="input-group-addon">
+                  									      <span class="glyphicon glyphicon-calendar"></span>
+             										       </span>
+          									      </div>								
+											</div>
+										</div>
+									 </div>
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Door Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="doorNumber"
+													data-toggle="tooltip" title="Enter a USCS Door Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="padBtm">
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<label>Enter Trailer Number: </label>
+											</div>
+											<div class="col-sm-4">
+
+												<input type="text" class="form-control" name="trailerNumber"
+													data-toggle="tooltip" title="Enter a Tailer Number"
+													required="required" maxlength="10" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3">
+											<label>Enter Up To 5 Delivery Ticket Numbers: </label>
+										</div>
+										<div class="col-sm-4"></div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="dtNumber1"
+												data-toggle="tooltip"
+												title="Enter a USCS Delivery Ticket Number"
+												required="required" maxlength="10" />
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="dtNumber2"
+												data-toggle="tooltip"
+												title="Enter a USCS Delivery Tickett Number" maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="dtNumber3"
+												data-toggle="tooltip"
+												title="Enter a USCS Delivery Ticket Number" maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="dtNumber4"
+												data-toggle="tooltip"
+												title="Enter a USCS Delivery Ticket Number" maxlength="10" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="dtNumber5"
+												data-toggle="tooltip"
+												title="Enter a USCS Delivery Ticket Number" maxlength="10" />
+										</div>
+									</div>
+
+									<div class="spacerVereticalSm"></div>
+									<div class="spacerVereticalSm"></div>
+
+									<button type="reset" class="btn btn">
+										<div class="warningText">Clear Form</div>
+									</button>
+									<button type="submit" class="btn btn-primary"
+										id="createOutboundAppointmentBtn">Create Outbout Appointment</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>
